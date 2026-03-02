@@ -230,10 +230,30 @@ Options menu built early so every system plugs into it.
 ### Strength Fragments
 - Collectible items found in the world (ruins, hidden spots, enemy drops)
 - Each fragment grants **+1 mid-air jump** permanently
-- Base: 1 jump. After 1 fragment: 2 jumps (double jump). After 2: 3 jumps. Etc.
+- **Hard cap: 5 total jumps** (1 ground + 4 mid-air = 4 fragments max)
 - The extra jumps are mid-air only — first jump is always a ground jump
 - Ties into the ruby civilization lore (fragments of ancient power)
 - Progression feels earned — the world gives back what the curse took
+
+### Jump Progression
+| Fragments | Total Jumps | Final Action (always) |
+|---|---|---|
+| 0 | 1 | Press jump again → **GLIDE** |
+| 1 | 2 | Press jump again → **GLIDE** |
+| 2 | 3 | Press jump again → **GLIDE** |
+| 3 | 4 | Press jump again → **GLIDE** |
+| 4 | 5 (MAX) | Press jump again → **GLIDE** |
+
+### Glide (always available — base mechanic)
+- **Glide is always the final action** after all current jumps are spent
+- Fragments give more jumps *before* glide — not a requirement to unlock it
+- Activated by pressing jump when airborne with no jumps remaining
+- **Not a jump** — a distinct state, a controlled fall
+- Slow, sustained descent — horizontal momentum fully preserved
+- Slight speed boost while gliding (carried by momentum)
+- She is still falling. Still cursed. Still not flying.
+- Cancel by releasing the button — resumes normal fall
+- Resets on landing alongside jumps
 
 ---
 
