@@ -223,9 +223,17 @@ Options menu built early so every system plugs into it.
 
 ### Movement — Cinder
 - Limited hover (resource bar — recharge rules TBD)
-- Limited jumps (count resets on landing)
+- **Jump limit: 1** — one jump, must land to reset
 - No freeform flight (cursed)
 - Void below islands = death or significant consequence
+
+### Strength Fragments
+- Collectible items found in the world (ruins, hidden spots, enemy drops)
+- Each fragment grants **+1 mid-air jump** permanently
+- Base: 1 jump. After 1 fragment: 2 jumps (double jump). After 2: 3 jumps. Etc.
+- The extra jumps are mid-air only — first jump is always a ground jump
+- Ties into the ruby civilization lore (fragments of ancient power)
+- Progression feels earned — the world gives back what the curse took
 
 ---
 
