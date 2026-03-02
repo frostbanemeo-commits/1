@@ -56,6 +56,44 @@ Everything is potentially destructible. The cone blast carves real geometry.
 - Islands are voxel terrain chunks, procedurally generated
 - Structures authored in MagicaVoxel, placed on islands
 
+### Island Dimensions
+```
+Footprint : 64 × 64 (X/Z)
+Y range   : -48 (bottom tip) → +64 (peak)   = 112 voxels tall
+
+Shape profile (side view):
+  ─────────────────────        ← flat-ish terrain top (+48 → +64)
+     /‾‾‾‾‾‾‾‾‾‾‾‾‾\          ← widest band (around +20 → +48)
+    /               \
+   (    BULK MASS    )
+    \               /          ← begins tapering below baseline
+     \             /
+      \           /
+       \         /
+        \       /              ← underbelly narrows
+         \     /
+          \   /
+           \ /
+            V                  ← bottom tip at -48
+```
+Island is **drop-shaped** — wide at the top, tapers continuously to a single
+point at the base. The widest cross-section is in the upper third, not at
+the very top. Think a rounded mesa on top with a stalactite underbelly.
+
+**Generation approach (planned):**
+- SDF: per-voxel evaluate `f(x,y,z)` against a teardrop SDF
+- Teardrop = sphere with radius that scales as a function of y
+  - y > baseline : radius shrinks gently (terrain variation on top)
+  - y < baseline : radius shrinks fast toward 0 at y = -48
+- Noise layer on top for terrain height variation (hills, craters, cliff edges)
+- Secondary noise layer for underbelly cave pockets and overhangs
+- Hardcoded seed per island → reproducible, same island every load
+
+**Why 64×64:**
+Gives enough room for a meaningful ruin, varied terrain, and combat encounters
+without making traversal feel like a chore. A player crossing the full island
+surface on foot at normal speed takes roughly 20–30 seconds.
+
 ### Full Material Registry
 
 #### Forces (destruction sources)
