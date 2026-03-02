@@ -1,0 +1,96 @@
+# === SECRETS & CREDENTIALS ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+secrets/
+credentials/
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+*.secret
+
+# === CONFIG WITH SENSITIVE DATA ===
+config/local.*
+config/production.*
+*.config.local.*
+local.settings.json
+
+# === TOKENS & AUTH ===
+.token
+.tokens
+*.token
+auth.json
+service-account*.json
+firebase-adminsdk*.json
+gcloud-credentials*.json
+
+# === CLOUD PROVIDER FILES ===
+.aws/
+.gcp/
+.azure/
+terraform.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# === DATABASE ===
+*.sqlite
+*.sqlite3
+*.db
+dump.sql
+*.dump
+
+# === DEPENDENCY DIRS ===
+node_modules/
+vendor/
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.pip/
+
+# === BUILD OUTPUT ===
+dist/
+build/
+out/
+target/
+*.o
+*.a
+*.so
+*.dll
+*.exe
+
+# === LOGS & TEMP ===
+*.log
+logs/
+tmp/
+temp/
+.cache/
+*.tmp
+*.swp
+*.swo
+*~
+
+# === OS FILES ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === EDITOR FILES ===
+.vscode/settings.json
+.idea/
+*.iml
+*.suo
+*.user
+
+# === PACKAGE LOCKS (optional - remove if you want to track these) ===
+# package-lock.json
+# yarn.lock
