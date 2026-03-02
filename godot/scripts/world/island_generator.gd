@@ -3,40 +3,38 @@ class_name IslandGenerator
 
 # ═══════════════════════════════════════════════════════════════════
 #  Island Generator
-#  Produces the voxel fill map for a single floating island.
+#  Produces the solid/air map for a single floating island.
 #
-#  Dimensions: 64 × 64 (X/Z),  Y from -48 to +64  (112 total)
-#  Shape     : teardrop — wide in the upper third, tapers to a
-#              single point at the base tip.
+#  UNITS: 1 voxel = 1 metre. All constants below are in metres.
 #
-#  Output    : 3D Array[bool] — true = solid voxel
-#              indexed as [x][y_offset][z] where y_offset = y + 48
+#  Footprint : 64 m × 64 m
+#  Height    : -48 m (tip) → +64 m (peak surface)  =  112 m total
+#  Shape     : teardrop — widest at +28 m, tapers to a point below.
+#
+#  Output    : 3D Array[bool]  true = solid
+#              indexed [x][yi][z],  yi = y - Y_MIN
 # ═══════════════════════════════════════════════════════════════════
 
-const SIZE_X  := 64
-const SIZE_Z  := 64
-const Y_MIN   := -48
-const Y_MAX   :=  64
-const Y_TOTAL := Y_MAX - Y_MIN          # 112
+const SIZE_X  := 64    # metres
+const SIZE_Z  := 64    # metres
+const Y_MIN   := -48   # metres  (bottom tip)
+const Y_MAX   :=  64   # metres  (peak surface)
+const Y_TOTAL := Y_MAX - Y_MIN    # 112 m
 
-# Centre of the footprint
 const CX := SIZE_X * 0.5
 const CZ := SIZE_Z * 0.5
 
-# ── Tunable shape parameters ──────────────────────────────────────
-# Widest cross-section radius (in voxels) — sits at TOP_BAND_Y
-const MAX_RADIUS        := 26.0
-const TOP_BAND_Y        := 28.0    # y value of widest point
-const TOP_TAPER_RATE    :=  0.06   # how fast radius shrinks going UP from widest
-const BOTTOM_TAPER_EXP  :=  1.7   # power curve — higher = sharper bottom point
+# ── Shape parameters (all in metres) ─────────────────────────────
+const MAX_RADIUS        := 26.0   # widest cross-section radius
+const TOP_BAND_Y        := 28.0   # elevation of widest point
+const TOP_TAPER_RATE    :=  0.06  # how fast radius shrinks above widest
+const BOTTOM_TAPER_EXP  :=  1.7  # power curve — higher = sharper tip
 
-# Surface noise (top terrain)
-const SURFACE_NOISE_AMP :=  8.0   # max height variation on surface
-const SURFACE_NOISE_SCL :=  0.08  # frequency
+const SURFACE_NOISE_AMP :=  8.0   # ± metres of surface height variation
+const SURFACE_NOISE_SCL :=  0.08  # noise frequency
 
-# Underbelly pocket noise (caves and overhangs on the underside)
-const BELLY_NOISE_AMP   :=  6.0
-const BELLY_NOISE_SCL   :=  0.12
+const BELLY_NOISE_AMP   :=  6.0   # ± metres carved from underside
+const BELLY_NOISE_SCL   :=  0.12  # noise frequency
 
 # ─────────────────────────────────────────────────────────────────
 
@@ -155,21 +153,19 @@ func assign_materials(solid_grid: Array, rng: RandomNumberGenerator) -> Array:
 
 
 func _material_for(y: int, depth: int, rng: RandomNumberGenerator) -> int:
-	# Deep core — stone
-	if depth > 12:
+	# depth is metres below the surface voxel of this column
+	if depth > 12:   # below 12 m — solid stone core
 		var r := rng.randf()
 		if r < 0.6:  return VoxelMaterialRegistry.Type.LIMESTONE
 		if r < 0.85: return VoxelMaterialRegistry.Type.GRANITE
 		return          VoxelMaterialRegistry.Type.MARBLE
 
-	# Mid layer — mixed stone with occasional soil
-	if depth > 4:
+	if depth > 4:    # 4–12 m — transition layer
 		var r := rng.randf()
 		if r < 0.5:  return VoxelMaterialRegistry.Type.LIMESTONE
 		if r < 0.75: return VoxelMaterialRegistry.Type.SOIL
 		return          VoxelMaterialRegistry.Type.SANDSTONE
 
-	# Surface (depth 0–4) — soil / grass
-	if depth == 0:
-		return VoxelMaterialRegistry.Type.GRASS
-	return VoxelMaterialRegistry.Type.SOIL
+	# 0–4 m — surface
+	if depth == 0:   return VoxelMaterialRegistry.Type.GRASS
+	return                  VoxelMaterialRegistry.Type.SOIL

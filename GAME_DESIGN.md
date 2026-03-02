@@ -51,48 +51,42 @@ Everything is potentially destructible. The cone blast carves real geometry.
 **Engine addon:** godot-voxel (Zylann) for terrain chunks and LOD
 **Asset format:** .vox (MagicaVoxel) for structures and objects
 
-### Voxel Scale
-- Each voxel ≈ 0.1m cube — fine enough to feel physical, coarse enough to perform
-- Islands are voxel terrain chunks, procedurally generated
-- Structures authored in MagicaVoxel, placed on islands
+### Units
+**1 voxel = 1 metre. Always. No conversion factor anywhere.**
+Voxel coordinates are world coordinates. "32 voxels" and "32 m" are the same number.
 
 ### Island Dimensions
 ```
-Footprint : 64 × 64 (X/Z)
-Y range   : -48 (bottom tip) → +64 (peak)   = 112 voxels tall
+Footprint  : 64 m × 64 m
+Height     : -48 m (bottom tip)  →  +64 m (peak)   =  112 m total
+Widest band:  +28 m elevation,  26 m radius
 
-Shape profile (side view):
-  ─────────────────────        ← flat-ish terrain top (+48 → +64)
-     /‾‾‾‾‾‾‾‾‾‾‾‾‾\          ← widest band (around +20 → +48)
-    /               \
-   (    BULK MASS    )
-    \               /          ← begins tapering below baseline
-     \             /
-      \           /
-       \         /
-        \       /              ← underbelly narrows
-         \     /
-          \   /
-           \ /
-            V                  ← bottom tip at -48
+Side profile:
+  ────────────────────────   ← terrain surface  (+56 m to +64 m)
+    /‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\      ← widest band      (+28 m, r = 26 m)
+   /                  \
+  (     BULK  MASS     )
+   \                  /      ← begins tapering   (0 m baseline)
+    \                /
+     \              /
+      \            /
+       \          /          ← underbelly narrows
+        \        /
+         \      /
+          \    /
+           \  /
+            \/              ← bottom tip  (-48 m)
 ```
-Island is **drop-shaped** — wide at the top, tapers continuously to a single
-point at the base. The widest cross-section is in the upper third, not at
-the very top. Think a rounded mesa on top with a stalactite underbelly.
+Drop-shaped — wide in the upper third, tapering to a single point below.
+Rounded mesa top with a stalactite underbelly. Overhangs and pocket caves
+on the underside from noise carving.
 
-**Generation approach (planned):**
-- SDF: per-voxel evaluate `f(x,y,z)` against a teardrop SDF
-- Teardrop = sphere with radius that scales as a function of y
-  - y > baseline : radius shrinks gently (terrain variation on top)
-  - y < baseline : radius shrinks fast toward 0 at y = -48
-- Noise layer on top for terrain height variation (hills, craters, cliff edges)
-- Secondary noise layer for underbelly cave pockets and overhangs
-- Hardcoded seed per island → reproducible, same island every load
-
-**Why 64×64:**
-Gives enough room for a meaningful ruin, varied terrain, and combat encounters
-without making traversal feel like a chore. A player crossing the full island
-surface on foot at normal speed takes roughly 20–30 seconds.
+**Generation approach:**
+- SDF: per-voxel `f(x,y,z)` evaluated against a teardrop SDF
+- Radius at y: gentle shrink above +28 m, power-curve taper below +28 m to tip
+- Surface noise ±8 m vertical variation (hills, craters, cliff edges)
+- Belly noise ±6 m carving on underside (overhangs, cave pockets)
+- Seed per island → fully reproducible
 
 ### Full Material Registry
 
