@@ -222,8 +222,9 @@ Options menu built early so every system plugs into it.
 - Every gap between islands without a ship is a risk decision
 
 ### Movement — Cinder
-- Limited hover (resource bar — recharge rules TBD)
-- **Jump limit: 1** — one jump, must land to reset
+- **Jump limit: 1** base — one jump, must land to reset
+- **Glide: hold jump after all jumps spent** — no bar, no energy limit
+- Gravity itself is the limiter — you are still falling, just slowly
 - No freeform flight (cursed)
 - Void below islands = death or significant consequence
 
@@ -247,13 +248,36 @@ Options menu built early so every system plugs into it.
 ### Glide (always available — base mechanic)
 - **Glide is always the final action** after all current jumps are spent
 - Fragments give more jumps *before* glide — not a requirement to unlock it
-- Activated by pressing jump when airborne with no jumps remaining
-- **Not a jump** — a distinct state, a controlled fall
-- Slow, sustained descent — horizontal momentum fully preserved
-- Slight speed boost while gliding (carried by momentum)
+- **Activated:** press jump when airborne with no jumps remaining
+- **Sustained:** hold jump to maintain glide
+- **Cancel:** release jump — normal fall resumes
+- No energy bar — gravity is the only limiter (you are still descending)
+- Horizontal momentum fully preserved + slight speed boost
 - She is still falling. Still cursed. Still not flying.
-- Cancel by releasing the button — resumes normal fall
 - Resets on landing alongside jumps
+
+---
+
+## Cone Blast
+
+Cinder's primary weapon. First introduced as pure reflex in the opening cinematic.
+
+### Behaviour
+- **Origin:** fires from screen center (camera crosshair) forward
+- **Shape:** pierces as a tight point at origin, expands as a cone over distance
+- **Radius growth:** `BASE_RADIUS × (1.0 + 0.15 × (distance / 60m))`
+  - Base radius ≈ 0.31m (π × 0.1) at origin — nearly a pierce
+  - ≈ 0.36m at 60m — visibly wider at range
+- **Falloff:** hard cutoff at **60 metres**
+- **Damage:** linear falloff — high near origin, lower at range
+- **Knockback:** strong near, reduced at range
+- **Cooldown:** 1.2 seconds between blasts
+- **Deduplication:** a target is hit once per blast regardless of cone overlap
+
+### Feel
+- Near targets: devastating, high damage, strong knockback
+- Far targets: pushes and weakens, rarely kills outright
+- The cone shape rewards closing distance — Cinder is not a sniper
 
 ---
 
@@ -301,7 +325,7 @@ Options menu built early so every system plugs into it.
 - [ ] The Baron — does he have a name? What makes him personally cruel (backstory)?
 - [ ] The starter island villagers — do any become recurring characters / allies?
 - [ ] Character customization scope — appearance only? Name? Background/origin?
-- [ ] Hover recharge rules — ground only? Over time? Resource-based?
+- [ ] Cone blast visual FX — what does the expanding cone look like as it travels?
 - [ ] Jump count — how many? Double jump? Resets on landing only?
 - [ ] Fall into the void — instant death or long fall with consequence?
 - [ ] Partial healing — does Cinder recover fragments of flight as she progresses?
