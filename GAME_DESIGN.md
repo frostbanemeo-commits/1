@@ -193,6 +193,37 @@ Options menu built early so every system plugs into it.
 
 ---
 
+## Perspective System
+
+### Camera Modes
+- **First Person** and **Third Person** both fully supported
+- Toggled freely from the options menu at any time
+- Both are complete playstyles — neither is secondary
+
+### Fixed Perspective Moments (not toggleable)
+| Moment | Perspective | Reason |
+|---|---|---|
+| Opening cinematic | First person | Narrative immersion — you are trapped in Cinder's experience |
+| Character customization | Third person | You must be able to see her |
+| After customization | Player choice | Default: third person, changeable any time |
+
+### What Changes Between Perspectives
+| Element | First Person | Third Person |
+|---|---|---|
+| Cone blast aim | Fires where you look | Aimed separately from movement |
+| Camera | Cinder's eyes | Behind / above Cinder |
+| Hover | Felt, not seen | Visible animation |
+| Island gaps | Imposing, harder to judge | More readable distances |
+| Combat | Visceral, close | Spatial, readable |
+| Controls | Look = aim | Move and aim decoupled |
+
+### What Stays Identical
+- All mechanics (hover bar, jump count, blast, movement)
+- All systems (blood, options, progression)
+- World, enemies, story — no content differences
+
+---
+
 ## Open Questions
 
 - [ ] Are characters 2D billboarded sprites in 3D world (Doom/Barony style) or fully 3D with painterly textures?
