@@ -27,12 +27,14 @@ class_name TravelSystem
 
 signal fast_travel_started(destination: WorldGrid.Cell)
 signal fast_travel_arrived(destination: WorldGrid.Cell)
+signal fast_travel_fragile_warning(fragile_items: Array, destination: WorldGrid.Cell)
 signal ship_summoned(to_position: Vector3)
 signal cell_discovered(cell: WorldGrid.Cell)
 
-@export var player:     Node3D
-@export var ship:       Node3D   ## The skyship node
-@export var world_grid: WorldGrid
+@export var player:      Node3D
+@export var ship:        Node3D        ## The skyship node
+@export var world_grid:  WorldGrid
+@export var cargo_hold:  CargoHold     ## Ship's cargo hold — checked on fast travel
 
 var _story_complete: bool = false
 
@@ -48,10 +50,27 @@ func can_fast_travel(cell: WorldGrid.Cell) -> bool:
 	return true
 
 
-func fast_travel_to(cell: WorldGrid.Cell) -> void:
+# Returns fragile items that would be destroyed — empty array = safe to teleport.
+# UI should call this and show a warning before calling fast_travel_to().
+func fragile_cargo_at_risk() -> Array:
+	if not cargo_hold:
+		return []
+	return cargo_hold.fragile_items()
+
+
+# Confirm fast travel — caller has already shown the warning if needed.
+# shatter: if true, destroy fragile cargo before teleporting.
+func fast_travel_to(cell: WorldGrid.Cell, shatter_fragile: bool = false) -> void:
 	if not can_fast_travel(cell):
 		push_warning("TravelSystem: fast travel blocked — cell undiscovered or invalid.")
 		return
+
+	if cargo_hold and cargo_hold.has_fragile_cargo():
+		if not shatter_fragile:
+			# Emit warning signal — let UI ask the player before proceeding
+			fast_travel_fragile_warning.emit(cargo_hold.fragile_items(), cell)
+			return
+		cargo_hold.shatter_fragile()
 
 	fast_travel_started.emit(cell)
 
