@@ -38,6 +38,42 @@ Cinder was cursed by the Emperor and stripped of her ability to fly. Now she nav
 ### Items & Objects
 - 3D, consistent with world geometry
 
+### Island Aesthetic — The Ruby Civilization
+The sky islands are ruins of an ancient civilization. Nature has reclaimed them.
+Every island tells the story of something lost.
+
+**Wildflowers**
+- Dense, colorful, growing through everything
+- Chaotic and alive — contrast against dead stone
+- The world is beautiful even in decay
+
+**Ancient Marble**
+- Columns, archways, plazas, cracked tile floors
+- A civilization built here once — grand and deliberate
+- Now broken, overgrown, silent
+
+**The Ruby Sphere Civilization**
+- The ancient people built with red ruby spheres — their defining material
+- Spheres appear as architecture, inlays, free-standing objects, buried fragments
+- Some still pulse faintly — residual energy, not fully dead
+- The empire is actively excavating and collecting them
+- Scattered across every island — common enough to be worldbuilding, rare enough to matter
+
+**A typical island surface reads:**
+```
+Wildflowers pushing through cracked marble tiles
+A broken column — ruby inlays still glowing faintly
+Red spheres half-buried in soil at the island's edge
+Vines over an archway that once marked something sacred
+Empire crates nearby — they've been here, taking what they can
+```
+
+**The implied history:**
+- The ruby civilization once controlled the sky islands
+- Something ended them — unknown, possibly connected to the Emperor
+- The Holy Stone the Emperor holds may be the last great ruby artifact
+- Cinder's curse and the civilization's fall may be connected
+
 ---
 
 ## Blood System
@@ -227,6 +263,9 @@ Options menu built early so every system plugs into it.
 ## Open Questions
 
 - [ ] Are characters 2D billboarded sprites in 3D world (Doom/Barony style) or fully 3D with painterly textures?
+- [ ] The ruby civilization — what ended them? Is it connected to the Emperor or the curse?
+- [ ] Is the Holy Stone the last great ruby artifact from the old civilization?
+- [ ] Do the ruby spheres have mechanical function (power sources, puzzle elements, upgrades)?
 - [ ] Working title / game name
 - [ ] Cinder's curse — is it publicly known or is she a stranger to the world?
 - [ ] The infiltrator — the pirate who first reached Cinder on the rack. Identity? Fate after the blast?
