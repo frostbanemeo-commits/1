@@ -3,169 +3,182 @@ class_name IslandGenerator
 
 # ═══════════════════════════════════════════════════════════════════
 #  Island Generator
-#  Produces the solid/air map for a single floating island.
 #
-#  UNITS: 1 voxel = 1 metre. All constants below are in metres.
+#  PHILOSOPHY:
+#    The world is defined in metres at real scale.
+#    Voxels are the pixelation — a rendering resolution choice.
+#    Change voxel_size to change detail level; the island stays 64 m wide.
 #
-#  Footprint : 64 m × 64 m
-#  Height    : -48 m (tip) → +64 m (peak surface)  =  112 m total
-#  Shape     : teardrop — widest at +28 m, tapers to a point below.
+#  Island dimensions (metres, real scale):
+#    Width      : 64 m × 64 m
+#    Height     : -48 m (bottom tip) → +64 m (peak)  =  112 m total
+#    Widest band:  +28 m elevation,  radius 26 m
 #
-#  Output    : 3D Array[bool]  true = solid
-#              indexed [x][yi][z],  yi = y - Y_MIN
+#  Default voxel sizes:
+#    0.1 m  — gameplay / destruction tier  (10 cm cubes)
+#    0.001 m — visual / colour tier        (1 mm, surface detail only)
 # ═══════════════════════════════════════════════════════════════════
 
-const SIZE_X  := 64    # metres
-const SIZE_Z  := 64    # metres
-const Y_MIN   := -48   # metres  (bottom tip)
-const Y_MAX   :=  64   # metres  (peak surface)
-const Y_TOTAL := Y_MAX - Y_MIN    # 112 m
+# ── Island definition — metres, real scale ────────────────────────
+const ISLAND_W  := 64.0    # metres
+const ISLAND_D  := 64.0    # metres
+const Y_BOTTOM  := -48.0   # metres  (tip)
+const Y_TOP     :=  64.0   # metres  (peak surface)
 
-const CX := SIZE_X * 0.5
-const CZ := SIZE_Z * 0.5
+# Shape
+const MAX_RADIUS       := 26.0   # metres, widest cross-section
+const WIDE_BAND_Y      := 28.0   # metres, elevation of widest point
+const TOP_TAPER_RATE   :=  0.06
+const BOTTOM_TAPER_EXP :=  1.7   # higher = sharper tip
 
-# ── Shape parameters (all in metres) ─────────────────────────────
-const MAX_RADIUS        := 26.0   # widest cross-section radius
-const TOP_BAND_Y        := 28.0   # elevation of widest point
-const TOP_TAPER_RATE    :=  0.06  # how fast radius shrinks above widest
-const BOTTOM_TAPER_EXP  :=  1.7  # power curve — higher = sharper tip
+# Surface noise
+const SURFACE_AMP := 8.0    # ± metres height variation on top
+const SURFACE_FRQ := 0.08
 
-const SURFACE_NOISE_AMP :=  8.0   # ± metres of surface height variation
-const SURFACE_NOISE_SCL :=  0.08  # noise frequency
-
-const BELLY_NOISE_AMP   :=  6.0   # ± metres carved from underside
-const BELLY_NOISE_SCL   :=  0.12  # noise frequency
+# Underbelly noise
+const BELLY_AMP   := 6.0    # ± metres carved from underside
+const BELLY_FRQ   := 0.12
 
 # ─────────────────────────────────────────────────────────────────
 
 var _noise_surface := FastNoiseLite.new()
 var _noise_belly   := FastNoiseLite.new()
-var _seed: int
+var _seed:       int
+var _voxel_size: float   # metres per voxel edge
+
+# Derived grid dimensions (computed in _init)
+var _gx: int   # voxels along X
+var _gz: int   # voxels along Z
+var _gy: int   # voxels along Y
 
 
-func _init(seed_value: int = 0) -> void:
-	_seed = seed_value
-	_noise_surface.seed           = seed_value
-	_noise_surface.noise_type     = FastNoiseLite.TYPE_PERLIN
-	_noise_surface.frequency      = SURFACE_NOISE_SCL
-	_noise_belly.seed             = seed_value + 1337
-	_noise_belly.noise_type       = FastNoiseLite.TYPE_PERLIN
-	_noise_belly.frequency        = BELLY_NOISE_SCL
+func _init(seed_value: int = 0, voxel_size: float = 0.1) -> void:
+	_seed       = seed_value
+	_voxel_size = voxel_size
+
+	# Grid size = real dimension / voxel size
+	_gx = int(ISLAND_W  / _voxel_size)
+	_gz = int(ISLAND_D  / _voxel_size)
+	_gy = int((Y_TOP - Y_BOTTOM) / _voxel_size)
+
+	_noise_surface.seed       = seed_value
+	_noise_surface.noise_type = FastNoiseLite.TYPE_PERLIN
+	_noise_surface.frequency  = SURFACE_FRQ
+
+	_noise_belly.seed         = seed_value + 1337
+	_noise_belly.noise_type   = FastNoiseLite.TYPE_PERLIN
+	_noise_belly.frequency    = BELLY_FRQ
 
 
-# ── Main generation entry ─────────────────────────────────────────
+# ── Main generation ───────────────────────────────────────────────
+# Returns [x][yi][z] → bool  (true = solid)
+# yi is the Y array index; real y = Y_BOTTOM + yi * voxel_size
 func generate() -> Array:
-	# [x][y_offset][z] → bool (true = solid)
-	var grid := []
-	grid.resize(SIZE_X)
-	for x in SIZE_X:
-		grid[x] = []
-		grid[x].resize(Y_TOTAL)
-		for yi in Y_TOTAL:
-			grid[x][yi] = []
-			grid[x][yi].resize(SIZE_Z)
-			grid[x][yi].fill(false)
+	var grid := _empty_grid(false)
+	var cx := _gx * 0.5
+	var cz := _gz * 0.5
 
-	for x in SIZE_X:
-		for z in SIZE_Z:
-			var dx := float(x) - CX
-			var dz := float(z) - CZ
-			var h_dist := sqrt(dx * dx + dz * dz)   # horizontal distance from axis
+	for xi in _gx:
+		for zi in _gz:
+			var dx := float(xi) - cx
+			var dz := float(zi) - cz
+			var h_dist := sqrt(dx * dx + dz * dz) * _voxel_size  # convert to metres
 
-			# Surface height at this (x,z) column
-			var surface_n := _noise_surface.get_noise_2d(float(x), float(z))
-			var surface_y := Y_MAX - 4.0 + surface_n * SURFACE_NOISE_AMP
+			# World-space X/Z for noise sampling (metres)
+			var wx := float(xi) * _voxel_size
+			var wz := float(zi) * _voxel_size
 
-			for y in range(Y_MIN, Y_MAX):
-				var yi := y - Y_MIN   # array index
-				if _is_solid(x, y, z, h_dist, surface_y):
-					grid[x][yi][z] = true
+			var surface_n := _noise_surface.get_noise_2d(wx, wz)
+			var surface_y := Y_TOP - (4.0 * _voxel_size) + surface_n * SURFACE_AMP
+
+			for yi in _gy:
+				var wy := Y_BOTTOM + yi * _voxel_size   # real y in metres
+				if _is_solid(wx, wy, wz, h_dist, surface_y):
+					grid[xi][yi][zi] = true
 
 	return grid
 
 
-# ── Per-voxel SDF test ────────────────────────────────────────────
-func _is_solid(x: int, y: int, z: int, h_dist: float, surface_y: float) -> bool:
-	# Voxels above the noisy surface are always air
-	if float(y) > surface_y:
+func _is_solid(wx: float, wy: float, wz: float, h_dist: float, surface_y: float) -> bool:
+	if wy > surface_y:
 		return false
 
-	# Radius of the island cross-section at this y
-	var allowed_r := _radius_at(float(y))
+	var allowed_r := _radius_at(wy)
 
-	# Apply underbelly pocket noise (carves cave-like overhangs on the bottom)
-	if float(y) < 0.0:
-		var belly_n := _noise_belly.get_noise_3d(float(x), float(y), float(z))
-		allowed_r += belly_n * BELLY_NOISE_AMP
+	if wy < 0.0:
+		var bn := _noise_belly.get_noise_3d(wx, wy, wz)
+		allowed_r += bn * BELLY_AMP
 
 	return h_dist <= allowed_r
 
 
-# ── Teardrop radius function ──────────────────────────────────────
-# r(y):
-#   y >= TOP_BAND_Y  → shrinks gently upward  (terrain top)
-#   y <  TOP_BAND_Y  → shrinks on power curve toward tip at Y_MIN
+# ── Teardrop radius at a given real y (metres) ────────────────────
 func _radius_at(y: float) -> float:
-	if y >= TOP_BAND_Y:
-		# Above widest point — gentle taper upward
-		var t := (y - TOP_BAND_Y) / float(Y_MAX - TOP_BAND_Y)
-		return MAX_RADIUS * (1.0 - t * t * TOP_TAPER_RATE * (Y_MAX - TOP_BAND_Y))
+	if y >= WIDE_BAND_Y:
+		var t := (y - WIDE_BAND_Y) / (Y_TOP - WIDE_BAND_Y)
+		return MAX_RADIUS * (1.0 - t * t * TOP_TAPER_RATE * (Y_TOP - WIDE_BAND_Y))
 	else:
-		# Below widest point — power curve down to tip
-		var t := (TOP_BAND_Y - y) / (TOP_BAND_Y - float(Y_MIN))  # 0 at widest, 1 at tip
+		var t := (WIDE_BAND_Y - y) / (WIDE_BAND_Y - Y_BOTTOM)
 		return MAX_RADIUS * (1.0 - pow(t, BOTTOM_TAPER_EXP))
 
 
-# ── Material assignment pass ──────────────────────────────────────
-# Returns a parallel grid of VoxelMaterialRegistry.Type values.
-# Called after generate() — only fills cells that are solid.
+# ── Material assignment ───────────────────────────────────────────
 func assign_materials(solid_grid: Array, rng: RandomNumberGenerator) -> Array:
-	var mat_grid := []
-	mat_grid.resize(SIZE_X)
-	for x in SIZE_X:
-		mat_grid[x] = []
-		mat_grid[x].resize(Y_TOTAL)
-		for yi in Y_TOTAL:
-			mat_grid[x][yi] = []
-			mat_grid[x][yi].resize(SIZE_Z)
-			mat_grid[x][yi].fill(0)   # 0 = AIR
+	var mat_grid := _empty_grid(0)
 
-	for x in SIZE_X:
-		for z in SIZE_Z:
-			# Find topmost solid voxel in this column
+	for xi in _gx:
+		for zi in _gz:
 			var top_yi := -1
-			for yi in range(Y_TOTAL - 1, -1, -1):
-				if solid_grid[x][yi][z]:
+			for yi in range(_gy - 1, -1, -1):
+				if solid_grid[xi][yi][zi]:
 					top_yi = yi
 					break
 			if top_yi < 0:
 				continue
 
-			for yi in Y_TOTAL:
-				if not solid_grid[x][yi][z]:
+			for yi in _gy:
+				if not solid_grid[xi][yi][zi]:
 					continue
-				var y := yi + Y_MIN
-				var depth := top_yi - yi   # 0 = surface, higher = deeper
-
-				mat_grid[x][yi][z] = _material_for(y, depth, rng)
+				var depth_m := float(top_yi - yi) * _voxel_size  # metres below surface
+				mat_grid[xi][yi][zi] = _material_for(depth_m, rng)
 
 	return mat_grid
 
 
-func _material_for(y: int, depth: int, rng: RandomNumberGenerator) -> int:
-	# depth is metres below the surface voxel of this column
-	if depth > 12:   # below 12 m — solid stone core
+func _material_for(depth_m: float, rng: RandomNumberGenerator) -> int:
+	if depth_m > 12.0:   # solid stone core
 		var r := rng.randf()
-		if r < 0.6:  return VoxelMaterialRegistry.Type.LIMESTONE
+		if r < 0.60: return VoxelMaterialRegistry.Type.LIMESTONE
 		if r < 0.85: return VoxelMaterialRegistry.Type.GRANITE
-		return          VoxelMaterialRegistry.Type.MARBLE
+		return              VoxelMaterialRegistry.Type.MARBLE
 
-	if depth > 4:    # 4–12 m — transition layer
+	if depth_m > 4.0:    # transition layer
 		var r := rng.randf()
-		if r < 0.5:  return VoxelMaterialRegistry.Type.LIMESTONE
+		if r < 0.50: return VoxelMaterialRegistry.Type.LIMESTONE
 		if r < 0.75: return VoxelMaterialRegistry.Type.SOIL
-		return          VoxelMaterialRegistry.Type.SANDSTONE
+		return              VoxelMaterialRegistry.Type.SANDSTONE
 
-	# 0–4 m — surface
-	if depth == 0:   return VoxelMaterialRegistry.Type.GRASS
-	return                  VoxelMaterialRegistry.Type.SOIL
+	if depth_m == 0.0:   return VoxelMaterialRegistry.Type.GRASS
+	return                      VoxelMaterialRegistry.Type.SOIL
+
+
+# ── Helpers ───────────────────────────────────────────────────────
+func _empty_grid(fill_value) -> Array:
+	var g := []
+	g.resize(_gx)
+	for xi in _gx:
+		g[xi] = []
+		g[xi].resize(_gy)
+		for yi in _gy:
+			g[xi][yi] = []
+			g[xi][yi].resize(_gz)
+			g[xi][yi].fill(fill_value)
+	return g
+
+
+func grid_size() -> Vector3i:
+	return Vector3i(_gx, _gy, _gz)
+
+
+func voxel_size() -> float:
+	return _voxel_size

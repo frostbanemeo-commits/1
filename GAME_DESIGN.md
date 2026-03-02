@@ -51,9 +51,21 @@ Everything is potentially destructible. The cone blast carves real geometry.
 **Engine addon:** godot-voxel (Zylann) for terrain chunks and LOD
 **Asset format:** .vox (MagicaVoxel) for structures and objects
 
-### Units
-**1 voxel = 1 metre. Always. No conversion factor anywhere.**
-Voxel coordinates are world coordinates. "32 voxels" and "32 m" are the same number.
+### Units & Voxel Philosophy
+The world is defined and measured in **real metres**. Objects are sized as they
+would be in reality — a door is 2 m tall, a person is 1.7 m, the island is 64 m wide.
+
+Voxels are the **pixelation layer** — a rendering resolution choice, not a
+fundamental unit. You pick how coarsely to discretise the world; the metre
+dimensions never change.
+
+| Tier | Voxel size | Purpose |
+|---|---|---|
+| Gameplay / destruction | 0.1 m (10 cm) | Physics, collision, blast, LOD chunks |
+| Visual / colour | 0.001 m (1 mm) | Surface colour detail — sub-voxel, like LCD sub-pixels |
+
+The generator is authored in metres. Pass it a `voxel_size` to get a grid
+at any resolution. Changing detail level never touches the island definition.
 
 ### Island Dimensions
 ```
