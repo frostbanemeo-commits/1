@@ -145,10 +145,28 @@ Options menu built early so every system plugs into it.
 - Tutorial starts mid-chaos: half-freed, 3am, pirates vs empire soldiers everywhere
 - The Baron survives — escapes in the chaos, furious, humiliated
 
-**The infiltrator — open question:**
-- Dead from the blast? Wounded? Unconscious?
-- If they survive, they become the first ally — and Cinder hurt them trying to save her
-- First moral weight: her salvation accidentally wounds her rescuer
+**After the Blast:**
+- Cinder fires — and collapses unconscious again. The blast took everything left in her.
+- Pirates flood the room, cut her free from the rack, carry her out
+- On deck: the pirate captain is trading blows directly with The Baron
+- The captain holds him — then swings back to the pirate ship at the last moment
+- The Baron's ship burning behind them as they pull away into the dark
+- The Baron screaming curses into the smoke — alive, furious, humiliated
+
+**The Following Morning — Character Customization:**
+- Cinder wakes on the deck of the pirate ship
+- Morning light. Open sky. She is free for the first time since the curse.
+- She looks at her hands. Looks at herself.
+- → **CHARACTER CUSTOMIZATION begins here**
+- Framing: the player is not in a menu — Cinder is on this deck, in this body, deciding who she is now
+- Pirates nearby — curious, giving her space
+- The captain is the first person she will speak to when customization ends
+
+**Why this structure works:**
+- Cinder is unconscious or helpless for the entire cinematic — player has no agency yet, only witness
+- First agency = the blast (reflex, uncontrolled)
+- Second agency = character customization (identity, intentional)
+- The pirates earn trust through action before a single word is spoken
 
 ### World Structure (narrative axis)
 ```
@@ -180,9 +198,11 @@ Options menu built early so every system plugs into it.
 - [ ] Are characters 2D billboarded sprites in 3D world (Doom/Barony style) or fully 3D with painterly textures?
 - [ ] Working title / game name
 - [ ] Cinder's curse — is it publicly known or is she a stranger to the world?
-- [ ] The infiltrator — dead, wounded, or alive after the blast? Do they become an ally?
+- [ ] The infiltrator — the pirate who first reached Cinder on the rack. Identity? Fate after the blast?
+- [ ] The pirate captain — name, design, personality. First speaking character Cinder meets.
 - [ ] The Baron — does he have a name? What makes him personally cruel (backstory)?
 - [ ] The starter island villagers — do any become recurring characters / allies?
+- [ ] Character customization scope — appearance only? Name? Background/origin?
 - [ ] Hover recharge rules — ground only? Over time? Resource-based?
 - [ ] Jump count — how many? Double jump? Resets on landing only?
 - [ ] Fall into the void — instant death or long fall with consequence?
