@@ -117,12 +117,38 @@ Options menu built early so every system plugs into it.
 8. [ESCAPE — TBD] ← player takes control here
 ```
 
-### The Escape (TBD)
-- The moment the player first has agency
-- Cinder is chained, weakened, on a moving enemy skyship
-- Functions as the tutorial — teaches hover, jump, movement under severe constraint
-- The Baron must survive this encounter — he becomes the recurring antagonist
-- Escape method to be decided (self, ally, accident, chaos)
+### The Escape — The Baron's Ship, 3am
+
+**Setup:**
+- Cinder is chained upright on a standing rack in a holding room below deck
+- The Baron has been gloating over her unconscious body — cruel, smug, alone with his prize
+- 3am — shift change. Skeleton crew. Most soldiers asleep.
+
+**The Pirate Attack:**
+- Pirates have learned The Baron captured something valuable
+- They choose the shift change at 3am deliberately — maximum vulnerability
+- An infiltrator slips belowdecks ahead of the main assault
+- Finds the room. Finds Cinder chained to the rack.
+- Reaches for her to free her—
+
+**The Blast:**
+- Cinder's eyes snap open — disoriented, terrified, dark room, stranger's face
+- Pure instinct. The cone blast fires.
+- The infiltrator is thrown. The room explodes outward.
+- Alarms. Shouting. The whole ship erupts into chaos.
+- Outside — the pirate assault begins under cover of the explosion.
+
+**Why this works:**
+- The cone blast is introduced as reflex — something Cinder *is*, not something she chose
+- The chains crack / rack partially breaks — she has limited movement
+- The pirate battle raging on deck covers her escape
+- Tutorial starts mid-chaos: half-freed, 3am, pirates vs empire soldiers everywhere
+- The Baron survives — escapes in the chaos, furious, humiliated
+
+**The infiltrator — open question:**
+- Dead from the blast? Wounded? Unconscious?
+- If they survive, they become the first ally — and Cinder hurt them trying to save her
+- First moral weight: her salvation accidentally wounds her rescuer
 
 ### World Structure (narrative axis)
 ```
@@ -154,7 +180,7 @@ Options menu built early so every system plugs into it.
 - [ ] Are characters 2D billboarded sprites in 3D world (Doom/Barony style) or fully 3D with painterly textures?
 - [ ] Working title / game name
 - [ ] Cinder's curse — is it publicly known or is she a stranger to the world?
-- [ ] The escape — how does Cinder break free from The Baron's ship?
+- [ ] The infiltrator — dead, wounded, or alive after the blast? Do they become an ally?
 - [ ] The Baron — does he have a name? What makes him personally cruel (backstory)?
 - [ ] The starter island villagers — do any become recurring characters / allies?
 - [ ] Hover recharge rules — ground only? Over time? Resource-based?
