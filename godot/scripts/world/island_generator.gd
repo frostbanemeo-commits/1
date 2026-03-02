@@ -158,7 +158,7 @@ func _material_for(depth_m: float, rng: RandomNumberGenerator) -> int:
 		if r < 0.75: return VoxelMaterialRegistry.Type.SOIL
 		return              VoxelMaterialRegistry.Type.SANDSTONE
 
-	if depth_m == 0.0:   return VoxelMaterialRegistry.Type.GRASS
+	if depth_m < _voxel_size * 0.5:   return VoxelMaterialRegistry.Type.GRASS
 	return                      VoxelMaterialRegistry.Type.SOIL
 
 

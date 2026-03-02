@@ -64,6 +64,7 @@ func build_from_island(solid_grid: Array, mat_grid: Array, y_min: int) -> void:
 			# Find topmost solid voxel in this column
 			var top_colour := VOID_COLOUR
 			var col: Array = solid_grid[vx]
+			vz = clampi(vz, 0, col[0].size() - 1)
 			for yi in range(col.size() - 1, -1, -1):
 				if col[yi][vz]:
 					var mat_type: int = mat_grid[vx][yi][vz]

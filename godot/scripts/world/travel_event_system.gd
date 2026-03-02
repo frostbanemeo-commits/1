@@ -81,8 +81,13 @@ const EVENT_TABLES: Array = [
 const EVENT_CHANCE: Array = [0.35, 0.50, 0.65, 0.80]
 
 var _rng          := RandomNumberGenerator.new()
+var _world_seed:  int = 0
 var _active_event: Dictionary = {}
-var _cells_this_session: Array = []   # cells visited this session (no repeat events)
+var _cells_this_session: Array[Vector2i] = []   # cells visited this session (no repeat events)
+
+
+func setup(world_seed: int) -> void:
+	_world_seed = world_seed
 
 
 # ── Called when player enters an empty cell ───────────────────────
@@ -97,7 +102,7 @@ func on_enter_empty_cell(cell: WorldGrid.Cell) -> void:
 	var zone   := cell.zone
 	var chance := EVENT_CHANCE[clampi(zone, 0, 3)]
 
-	_rng.seed = int(Time.get_unix_time_from_system()) ^ (cell.grid_pos.x * 999983 + cell.grid_pos.y)
+	_rng.seed = _world_seed ^ (cell.grid_pos.x * 999983 + cell.grid_pos.y * 1000003)
 	if _rng.randf() > chance:
 		# No event this crossing — open sky, peace
 		return

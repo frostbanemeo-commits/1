@@ -20,7 +20,7 @@ signal fragile_cargo_shattered(items: Array)   # fast travel consequence
 
 const MAX_SLOTS := 20   # total cargo hold capacity
 
-var _items: Array = []   # Array[CargoItem]
+var _items: Array[CargoItem] = []
 
 
 # ── Cargo management ──────────────────────────────────────────────
