@@ -52,20 +52,49 @@ Everything is potentially destructible. The cone blast carves real geometry.
 **Asset format:** .vox (MagicaVoxel) for structures and objects
 
 ### Units & Voxel Philosophy
+
+**Voxels are Lego bricks filling space.**
+Discrete cubes that together approximate a continuous world — the same way
+pixels approximate a continuous image. The finer the brick, the higher the
+fidelity. The grid is just numbers in an array, which makes it trivially
+machine-readable and machine-writable.
+
 The world is defined and measured in **real metres**. Objects are sized as they
 would be in reality — a door is 2 m tall, a person is 1.7 m, the island is 64 m wide.
 
-Voxels are the **pixelation layer** — a rendering resolution choice, not a
-fundamental unit. You pick how coarsely to discretise the world; the metre
-dimensions never change.
+Voxels are the **pixelation layer** — a rendering resolution choice applied on
+top of the metric definition. Changing resolution never changes the design.
 
 | Tier | Voxel size | Purpose |
 |---|---|---|
-| Gameplay / destruction | 0.1 m (10 cm) | Physics, collision, blast, LOD chunks |
-| Visual / colour | 0.001 m (1 mm) | Surface colour detail — sub-voxel, like LCD sub-pixels |
+| Gameplay / destruction | 0.1 m (10 cm) | Physics, collision, blast, falling chunks |
+| Visual / colour | 0.001 m (1 mm) | Surface colour detail — sub-voxel, LCD sub-pixel style |
 
-The generator is authored in metres. Pass it a `voxel_size` to get a grid
-at any resolution. Changing detail level never touches the island definition.
+### AI-Assisted Content Generation
+
+Because voxels are to 3D what pixels are to 2D, any tool that generates
+images can feed into the voxel colour layer:
+
+```
+AI generates colour map (image)
+         ↓
+Sample pixel colours onto voxel face at 0.001 m tier
+         ↓
+Chunky 0.1 m geometry  +  AI-painted surface detail
+```
+
+**Practical pipeline:**
+- Generate a colour / material map image (AI image gen, or procedural)
+- Project it onto voxel faces as the visual tier colour source
+- The 0.1 m destruction tier handles all gameplay — visuals are cosmetic on top
+- Artists can paint voxel colour maps the same way they paint textures, or
+  generate them with any image tool
+
+**Why this works:**
+Voxel grids are just 3D arrays of numbers. Machine logic reads and writes them
+natively — easier than polygon meshes, easier than UV-unwrapped textures.
+The discrete structure is a feature, not a limitation. It makes procedural
+generation, AI generation, and runtime modification all straightforward.
 
 ### Island Dimensions
 ```
