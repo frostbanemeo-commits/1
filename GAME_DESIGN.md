@@ -36,7 +36,52 @@ Cinder was cursed by the Emperor and stripped of her ability to fly. Now she nav
 - High detail characters contrast against chunky world geometry — intentional
 
 ### Items & Objects
-- 3D, consistent with world geometry
+- 3D voxel objects, consistent with world geometry
+
+---
+
+## Voxel World System
+
+### Core Principle — Teardown Style
+Every object in the world is built from small colored voxel blocks.
+No polygon meshes with textures — color is baked directly into each voxel.
+Everything is potentially destructible. The cone blast carves real geometry.
+
+**Reference:** Teardown (voxel destruction), MagicaVoxel (asset authoring)
+**Engine addon:** godot-voxel (Zylann) for terrain chunks and LOD
+**Asset format:** .vox (MagicaVoxel) for structures and objects
+
+### Voxel Scale
+- Each voxel ≈ 0.1m cube — fine enough to feel physical, coarse enough to perform
+- Islands are voxel terrain chunks, procedurally generated
+- Structures authored in MagicaVoxel, placed on islands
+
+### Material Color Palette
+No textures — color encodes both aesthetics and material type.
+
+| Material | Colors | Behaviour |
+|---|---|---|
+| Soil | `#6B4226` `#7A5230` `#4A3018` | Soft, easy to destroy, scatters on impact |
+| Marble | `#E8E4DC` `#D4CFC6` `#C8C0B4` (veins: `#9E9690`) | Hard, shatters in large chunks |
+| Wildflower | `#FF4466` `#FFD700` `#CC44FF` `#44AAFF` `#FF8833` | Decorative, scattered instantly |
+| Ruby sphere | `#CC1122` `#AA0011` `#FF2233` + emissive glow | Explosive scatter, glows, high visual impact |
+| Empire iron | `#3A3A3E` `#2E2E32` `#4A4A50` | Dense, slow to destroy, heavy chunks |
+| Ancient wood | `#8B6914` `#7A5C10` | Splinters into smaller fragments |
+| Sky/void | Deep blue-purple gradient below islands | Instant death zone |
+
+### Destruction
+- **Cone blast** excavates voxels in the cone volume — carves real holes in geometry
+- Destroyed voxels scatter as physics debris briefly, then despawn
+- Destruction is persistent within a session
+- Different materials require different blast power to destroy (tunable)
+- Blasting island edges enough could collapse sections — environmental hazard
+
+### Why This Works for This Game
+- The cone blast becomes **visually readable** — you see the hole it makes
+- Ruby spheres exploding into crimson voxels = immediately satisfying
+- Marble columns shattering = the world feels ancient and breakable
+- Empire structures resisting the blast = communicates danger before combat
+- Wildflowers scattered by a blast = even beauty is fragile here
 
 ### Island Aesthetic — The Ruby Civilization
 The sky islands are ruins of an ancient civilization. Nature has reclaimed them.

@@ -20,6 +20,7 @@ extends Node3D
 # ─────────────────────────────────────────
 
 signal blast_fired(origin: Vector3, direction: Vector3)
+signal blast_hit_voxels(origin: Vector3, direction: Vector3, hit_points: Array, blast_power: float)
 
 # ── Tuning ───────────────────────────────
 const MAX_RANGE    := 60.0          # metres — hard falloff
@@ -69,6 +70,7 @@ func fire() -> void:
 func _cast_cone(origin: Vector3, forward: Vector3) -> void:
 	var space_state := get_world_3d().direct_space_state
 	var hit_bodies  := {}   # deduplicate: body → closest distance hit
+	var voxel_hits  := []   # Array of {position, radius, distance} for destruction
 
 	for i in range(1, SEGMENTS + 1):
 		var t      := float(i) / float(SEGMENTS)
@@ -88,8 +90,19 @@ func _cast_cone(origin: Vector3, forward: Vector3) -> void:
 			var body: Object = result.get("collider")
 			if body and body not in hit_bodies:
 				hit_bodies[body] = dist
+			# Collect world-space hit points for voxel destruction
+			voxel_hits.append({
+				"position": center,
+				"radius":   radius,
+				"distance": dist,
+			})
 
 	_apply_hits(hit_bodies, origin, forward)
+
+	# Notify voxel destruction system
+	if voxel_hits.size() > 0:
+		var blast_power := 1.0   # full power — scale by charge/upgrade later
+		blast_hit_voxels.emit(origin, forward, voxel_hits, blast_power)
 
 
 func _apply_hits(hit_bodies: Dictionary, origin: Vector3, forward: Vector3) -> void:
