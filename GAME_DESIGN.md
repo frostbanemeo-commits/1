@@ -56,18 +56,98 @@ Everything is potentially destructible. The cone blast carves real geometry.
 - Islands are voxel terrain chunks, procedurally generated
 - Structures authored in MagicaVoxel, placed on islands
 
-### Material Color Palette
-No textures — color encodes both aesthetics and material type.
+### Full Material Registry
 
-| Material | Colors | Behaviour |
-|---|---|---|
-| Soil | `#6B4226` `#7A5230` `#4A3018` | Soft, easy to destroy, scatters on impact |
-| Marble | `#E8E4DC` `#D4CFC6` `#C8C0B4` (veins: `#9E9690`) | Hard, shatters in large chunks |
-| Wildflower | `#FF4466` `#FFD700` `#CC44FF` `#44AAFF` `#FF8833` | Decorative, scattered instantly |
-| Ruby sphere | `#CC1122` `#AA0011` `#FF2233` + emissive glow | Explosive scatter, glows, high visual impact |
-| Empire iron | `#3A3A3E` `#2E2E32` `#4A4A50` | Dense, slow to destroy, heavy chunks |
-| Ancient wood | `#8B6914` `#7A5C10` | Splinters into smaller fragments |
-| Sky/void | Deep blue-purple gradient below islands | Instant death zone |
+#### Forces (destruction sources)
+| Force | Source |
+|---|---|
+| Cone Blast | Cinder's weapon |
+| Fire | Burning, spreads to flammable materials |
+| Physical | Collision, fall impact |
+| Explosion | Barrel chain reactions, ruby bursts |
+| Empire Weapon | Enemy attacks |
+| Void | Lore / special — bypasses most immunity |
+
+#### Reactions
+| Reaction | Meaning |
+|---|---|
+| IMMUNE | Zero effect — not even a scratch |
+| RESISTANT | Partial damage, cannot fully destroy |
+| NORMAL | Standard destruction at rated hardness |
+| WEAK | Extra vulnerable — destroyed at low power |
+| INSTANT | Destroyed immediately, power irrelevant |
+| REACTIVE | Triggers secondary effect (explosion, fire spread) |
+
+---
+
+#### Natural
+| Material | Hardness | Cone Blast | Notable |
+|---|---|---|---|
+| Soil | 0.05 | NORMAL | Soft, scatters |
+| Sand | 0.02 | NORMAL | Very soft |
+| Grass | 0.02 | NORMAL | Surface layer |
+| Gravel | 0.15 | NORMAL | Scatters in chunks |
+
+#### Organic
+| Material | Hardness | Cone Blast | Notable |
+|---|---|---|---|
+| Wood | 0.20 | **INSTANT** | Blast destroys completely. Flammable. |
+| Bark | 0.15 | **INSTANT** | Flammable |
+| Leaves | 0.00 | **INSTANT** | Flammable |
+| Wildflower | 0.00 | **INSTANT** | Decorative scatter |
+| Vine | 0.05 | **INSTANT** | Flammable |
+| Root | 0.25 | WEAK | Harder than surface wood |
+
+#### Stone
+| Material | Hardness | Cone Blast | Notable |
+|---|---|---|---|
+| Limestone | 0.45 | NORMAL | Mid-tier |
+| Granite | 0.75 | **RESISTANT** | Blast bounces off, needs explosion |
+| Marble | 0.55 | NORMAL | Shatters beautifully |
+| Sandstone | 0.35 | NORMAL | Crumbles |
+| Basalt | 0.85 | **RESISTANT** | Toughest natural stone |
+
+#### Ruby Civilization
+| Material | Hardness | Cone Blast | Notable |
+|---|---|---|---|
+| Ruby Sphere | 0.35 | **REACTIVE** | Crimson voxel explosion. Emissive. |
+| Ruby Inlay | 0.30 | **REACTIVE** | Embedded in marble |
+| Ancient Tile | 0.50 | NORMAL | Floor/wall decoration |
+| Ancient Pillar | 0.65 | NORMAL | Structural ruin element |
+| Glowstone | 0.40 | **REACTIVE** | Ancient light source. Emissive. |
+
+#### Sacred / Indestructible
+| Material | Cone Blast | All Forces | Lore |
+|---|---|---|---|
+| **Ancient Temple Block** | **IMMUNE** | **IMMUNE** | Predates ruby civilization. Nothing breaks it. |
+| Void Stone | RESISTANT | RESISTANT | Empire-quarried, near-indestructible |
+| Heart Stone | **IMMUNE** | **IMMUNE** | Pulses. Connected to the Holy Stone. |
+| Cursed Iron | **IMMUNE** | **IMMUNE** | Cinder's chains. Only unlocked, never broken. |
+
+#### Empire
+| Material | Hardness | Cone Blast | Notable |
+|---|---|---|---|
+| Empire Iron | 0.80 | NORMAL | Hard, heavy |
+| Empire Plating | 0.92 | **RESISTANT** | Reinforced armour |
+| Empire Treated Wood | 0.45 | NORMAL | Fire-resistant treatment |
+| Empire Glass | 0.05 | **INSTANT** | Shatters dramatically |
+| Explosive Barrel | 0.10 | **REACTIVE** | Chain detonation, 4m radius |
+
+#### Ship
+| Material | Hardness | Cone Blast | Notable |
+|---|---|---|---|
+| Ship Hull Plank | 0.30 | NORMAL | Flammable |
+| Ship Rope | 0.00 | **INSTANT** | Snaps immediately |
+| Ship Sail | 0.00 | **INSTANT** | Tears immediately |
+| Ship Iron Fitting | 0.65 | NORMAL | Structural |
+
+#### Environmental
+| Material | Hardness | Cone Blast | Notable |
+|---|---|---|---|
+| Ice | 0.10 | WEAK | Slippery surface effect |
+| Snow | 0.00 | **INSTANT** | Puffs away |
+| Ash | 0.00 | **INSTANT** | Scatters in wisps |
+| Ember | 0.00 | **INSTANT** | Damages on contact. Emissive. |
 
 ### Destruction
 - **Cone blast** excavates voxels in the cone volume — carves real holes in geometry
