@@ -114,6 +114,33 @@ tier. Gameplay structure (what material, what hardness) lives at the 0.1 m
 destruction tier. The two layers are independent — visual richness does not
 affect gameplay logic.
 
+### The Primal Colour
+
+**Royal Purple — `#7B2FBE` — is the base state of all magic in this world.**
+
+Every voxel cluster has a single origin voxel — the spark that began the cluster.
+That origin voxel is born primal purple. It holds the colour for a brief moment —
+the spark — then resolves to the colour of its material.
+The primal colour is stored in the cluster's soul record permanently. It is never
+destroyed. It is the record of birth.
+
+```
+Origin voxel placed  →  PRIMAL PURPLE (#7B2FBE)  →  material colour
+                         ↑ the spark                 ↑ the identity
+```
+
+The sweep radiates outward from the origin. Voxels closer to the origin resolve
+first — a wave of purple becoming matter, moving outward from the soul.
+
+**Lore implications:**
+- All matter in this world emerged from the primal purple
+- The ruby civilization didn't create something new — they channelled purple into red
+- The Emperor's cursed iron was purple before it was forged into chains
+- Cinder's cone blast carries a trace of primal at its origin point —
+  the tightest point of the cone, where it pierces, briefly shows purple
+  before expanding outward as fire and force
+- The Holy Stone the Emperor holds — what colour is it at its origin voxel?
+
 ### Units & Voxel Philosophy
 
 **Voxels are Lego bricks filling space.**

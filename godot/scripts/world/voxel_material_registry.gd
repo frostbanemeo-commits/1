@@ -4,6 +4,14 @@ extends RefCounted
 #  Voxel Material Registry
 #  The authoritative source for every material in the world.
 #
+#  THE PRIMAL COLOUR — #7B2FBE — Royal Purple
+#    Every voxel cluster is born from this colour.
+#    The origin voxel of every cluster sparks purple before resolving
+#    to its material colour. The primal colour is the base state of
+#    all magic — the generative force from which all matter emerges.
+#    It is stored in the cluster's soul record and never destroyed.
+#    See: VoxelCluster, ClusterSpawner.
+#
 #  Materials are organized into categories:
 #    Natural      — soil, sand, gravel, grass
 #    Organic      — wood, bark, leaves, wildflower, vine, root
@@ -18,6 +26,10 @@ extends RefCounted
 #    Each Force type has a reaction against each Material type.
 #    Reactions: IMMUNE / RESISTANT / NORMAL / WEAK / INSTANT / REACTIVE
 # ═══════════════════════════════════════════════════════════════════
+
+# The primal colour — origin of all clusters. Never used as a material.
+# Referenced here so every system has one source of truth.
+const PRIMAL_PURPLE := Color(0.482, 0.184, 0.745)   # #7B2FBE
 
 
 # ── Material Types ───────────────────────────────────────────────────
