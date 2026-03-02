@@ -93,9 +93,36 @@ Options menu built early so every system plugs into it.
 - The mechanical frustration IS the emotional story
 
 ### The Emperor
-- Antagonist — holds the Holy Stone
+- Primary antagonist — holds the Holy Stone
 - Rules an evil empire spread across the sky islands
-- Final destination of the journey
+- Final destination of the journey — heart of the empire
+
+### The Baron
+- Secondary antagonist — lord serving the Emperor
+- Cruel and evil
+- Commanded the agents who captured Cinder
+- Was transporting Cinder to the Emperor aboard his personal skyship
+- Escapes/survives the opening — becomes the recurring threat across the mid-game
+- The face of the empire the player will hate before ever meeting the Emperor
+
+### Opening Cinematic Sequence
+```
+1. Cinder — cursed, flight failing — crashes onto the starter island
+2. Local villagers find her, take her in, begin nursing her back to health
+3. Cinder is comatose. Completely helpless.
+4. Empire agents learn she is there — arrive on the island
+5. Agents confiscate her. She cannot resist. Put in chains.
+6. Taken aboard The Baron's skyship.
+7. The Baron intends to deliver her to the Emperor.
+8. [ESCAPE — TBD] ← player takes control here
+```
+
+### The Escape (TBD)
+- The moment the player first has agency
+- Cinder is chained, weakened, on a moving enemy skyship
+- Functions as the tutorial — teaches hover, jump, movement under severe constraint
+- The Baron must survive this encounter — he becomes the recurring antagonist
+- Escape method to be decided (self, ally, accident, chaos)
 
 ### World Structure (narrative axis)
 ```
@@ -127,6 +154,9 @@ Options menu built early so every system plugs into it.
 - [ ] Are characters 2D billboarded sprites in 3D world (Doom/Barony style) or fully 3D with painterly textures?
 - [ ] Working title / game name
 - [ ] Cinder's curse — is it publicly known or is she a stranger to the world?
+- [ ] The escape — how does Cinder break free from The Baron's ship?
+- [ ] The Baron — does he have a name? What makes him personally cruel (backstory)?
+- [ ] The starter island villagers — do any become recurring characters / allies?
 - [ ] Hover recharge rules — ground only? Over time? Resource-based?
 - [ ] Jump count — how many? Double jump? Resets on landing only?
 - [ ] Fall into the void — instant death or long fall with consequence?
