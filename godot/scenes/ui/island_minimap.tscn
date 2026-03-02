@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://minimap"]
+
+[ext_resource type="Script" path="res://scripts/ui/island_minimap.gd" id="1"]
+
+[node name="IslandMinimap" type="Control"]
+# Anchor: top-right corner, fixed 32×32 px, 8px margin from edges
+anchor_left   = 1.0
+anchor_top    = 0.0
+anchor_right  = 1.0
+anchor_bottom = 0.0
+offset_left   = -40.0   # 32px wide + 8px margin
+offset_top    =   8.0
+offset_right  =  -8.0
+offset_bottom =  40.0   # 32px tall + 8px margin
+script        = ExtResource("1")
+
+[node name="BorderRect" type="Panel" parent="."]
+# 1px purple border around the map
+anchor_left   = 0.0
+anchor_top    = 0.0
+anchor_right  = 1.0
+anchor_bottom = 1.0
+offset_left   = -1.0
+offset_top    = -1.0
+offset_right  =  1.0
+offset_bottom =  1.0
+
+[node name="MapRect" type="TextureRect" parent="."]
+anchor_left   = 0.0
+anchor_top    = 0.0
+anchor_right  = 1.0
+anchor_bottom = 1.0
+expand_mode   = 0   # no stretch — pixel perfect
